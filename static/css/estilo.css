@@ -1,0 +1,70 @@
+.prueba{
+
+    text-align: center; 
+    color: green;
+	font-size: 130%;
+	float: left;
+	margin-left: 100%;
+	
+};
+
+.boton {
+border: 1px solid red; /*anchura, estilo y color borde*/
+padding: 10px; /*espacio alrededor texto*/
+background-color: grey; /*color botón*/
+color: black; /*color texto*/
+text-decoration: none; /*decoración texto*/
+text-transform: uppercase; /*capitalización texto*/
+font-family: 'Helvetica', sans-serif; /*tipografía texto*/
+border-radius: 50px; /*bordes redondos*/
+}
+
+
+.color{color : white;
+		margin-top: auto;
+		
+
+
+}
+
+.text_umbral{
+	position: absolute;
+	left : 100px;
+	top  : 120px;
+	color : white
+}
+
+.umbral_title {
+	position: absolute;
+	left : 270px;
+	top  : -20px;
+	color : white
+}
+
+.text_umbral2{
+	position: absolute;
+	left : 180px;
+	top  : 150px;
+	color : white
+}
+.text_umbral3{
+	position: absolute;
+	left : 400px;
+	top  : 150px;
+	color : white
+}
+
+.calcula_media{
+	position: absolute;
+	left : 860px;
+	top  : 100px;
+	color : white
+}
+
+.calcula_media2{
+	position: absolute;
+	left : 800px;
+	top  : 140px;
+	color : white;
+	font-size :20px ;
+}
