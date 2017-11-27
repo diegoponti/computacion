@@ -13,6 +13,9 @@ import time
 import MySQLdb
 from beebotte import *
 
+from pymongo import MongoClient
+from Aleatorio import Aleatorio
+
 
 app = Flask(__name__)
 
@@ -22,15 +25,15 @@ Secret_Number = 'd63c899e291a7677c2f5281c27b59c95ca9d12db64d9724330a2db1b0148f08
 Channel_Token = '1510156441853_8sSc491F8yBRmF0u'
 _hostname   = 'api.beebotte.com'
 
-bbt = BBT( Apy_key, Secret_Number, hostname = _hostname)
+bbt = BBT( Apy_key, Secret_Number, hostname = _hostname)    # Concetar a beebotte
 
-DB_HOST = '127.0.0.1'
+DB_HOST = '127.0.0.1'										# Datos para conectar a mySql
 DB_USER = 'root'
 DB_PASS = 'mysqlroot'
 DB_NAME = 'Numeros_aleatorios'
 
-def run_query(query=''): 
-	datos=[DB_HOST, DB_USER, DB_PASS, DB_NAME] 
+def run_query(query=''): 		
+	datos=[DB_HOST, DB_USER, DB_PASS, DB_NAME]  			
 	conn = MySQLdb.connect(*datos) # Conectar a la base de datos 
 	cursor = conn.cursor()         # Crear un cursor 
 	cursor.execute(query)          # Ejecutar una consulta 
@@ -63,9 +66,13 @@ def obtener_dato():
 	print valor + ' ' +fecha +' '+ hora
 	print patron1
 
+	###########################  MYSQL  ##########################
+
 	query = "INSERT INTO N_aleatorio (valor, fecha , hora) VALUES ('%f','%s','%s')" %(float(valor), fecha, hora)
 
 	run_query(query)
+
+	###########################  BEEBOTTE  #####################
 
 	bbt.write("n_aleatorios", "valor", float(valor))
 
@@ -73,7 +80,60 @@ def obtener_dato():
 
 	bbt.write("n_aleatorios", "hora", str(hora))
 
+	# ###########################  MONGO DB  ######################
 
+	# muestra = Aleatorio(valor,fecha,hora);
+
+	# mongoClient = MongoClient('localhost',27017) 	# conectar a mongo
+	# db = mongoClient.Aleatorio
+	# collection = db.Valores
+	# collection.insert(muestra.toDBCollection())
+
+
+	# cursor = collection.find()
+	# for elemento in cursor:
+	#     print "%s - %s - %s " \
+	#           %(elemento['valor'], elemento['fecha'], elemento['hora'])
+
+	# #collection.update({"edad":{"$gt":30}},{"$inc":{"edad":100}}, upsert = False, multi = True)
+	# #collection.remove({"internacional":True})
+	# mongoClient.close()
+
+
+
+
+def mongo_db_prueba():
+	###########################  MONGO DB  ######################
+	url = 'http://www.numeroalazar.com.ar/'
+
+	r = requests.get(url)
+
+	patron1 = re.compile(r'\d{1,2}[.]\d{1,2}')
+	fecha = time.strftime("%Y/%m/%d")
+	hora = time.strftime("%X")
+
+	valor = patron1.findall(r.text)[3]
+
+	print valor + ' ' +fecha +' '+ hora
+	
+
+	muestra = Aleatorio(valor,fecha,hora);
+
+	mongoClient = MongoClient('localhost',27017) 	# conectar a mongo
+	db = mongoClient.Aleatorio
+	collection = db.Valores
+
+	collection.insert(muestra.toDBCollection())
+	print collection
+
+	cursor = collection.find()
+	for nn in cursor:
+	    print "%s - %s - %s - " \
+	          %(nn['valor'], nn['fecha'], nn['hora'])
+
+	#collection.update({"edad":{"$gt":30}},{"$inc":{"edad":100}}, upsert = False, multi = True)
+	#collection.remove({"internacional":True})
+	mongoClient.close()
 
 def obtener_limites():
 	global umbral
@@ -122,6 +182,7 @@ def calcular_media_bbt():
 	global c
 
 	num_bbt = bbt.read("n_aleatorios", "valor", limit=30)
+	#print num_bbt[ ]['data']
 	media = 0.0
 	media_superior = 0.0
 	media_inferior = 0.0
@@ -221,6 +282,7 @@ if __name__ == '__main__':
 	media_datos_no_superados =00.00 
 	#obtener_dato()
 	obtener_limites()
-	calcular_media_bbt()
+	#calcular_media_bbt()
+	mongo_db_prueba()
 	app.debug = True
 	app.run(host ='0.0.0.0')
