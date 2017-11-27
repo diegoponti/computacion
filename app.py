@@ -105,7 +105,7 @@ def obtener_dato():
 def mongo_db_prueba():
 	###########################  MONGO DB  ######################
 	url = 'http://www.numeroalazar.com.ar/'
-
+	global cursor
 	r = requests.get(url)
 
 	patron1 = re.compile(r'\d{1,2}[.]\d{1,2}')
@@ -123,14 +123,19 @@ def mongo_db_prueba():
 	db = mongoClient.Aleatorio
 	collection = db.Valores
 
-	collection.insert(muestra.toDBCollection())
-	print collection
+	#collection.insert(muestra.toDBCollection())
+	#print collection
 
 	cursor = collection.find()
-	for nn in cursor:
-	    print "%s - %s - %s - " \
-	          %(nn['valor'], nn['fecha'], nn['hora'])
+	print cursor
+	# for nn in cursor:
+	#     print "%s - %s - %s - " \
+	#           %(nn['valor'], nn['fecha'], nn['hora'])
 
+
+	#lista_no_superado = cursor
+	# print "eeeeeeeee"
+	# print lista_no_superado
 	#collection.update({"edad":{"$gt":30}},{"$inc":{"edad":100}}, upsert = False, multi = True)
 	#collection.remove({"internacional":True})
 	mongoClient.close()
@@ -235,6 +240,8 @@ def index():
 			if (request.form['db'] == 'sql'):
 				mensaje= 'sql'
 				calcular_media()
+				
+				
 				return render_template("index.html", umbral=umbral,lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 	 									media_acumulada=media_acumulada,media_datos_superados=media_datos_superados,
 										media_datos_no_superados=media_datos_no_superados, mensaje=mensaje)
@@ -252,8 +259,8 @@ def index():
 	 		obtener_limites()
 	 		#if 	(umbral == '13.00'):
 	 		#		print "Finalizado"
-
-			return render_template("index.html", umbral=umbral,lista_superado=lista_superado,lista_no_superado=lista_no_superado)#,
+			mongo_db_prueba()
+			return render_template("index.html", umbral=umbral,lista_superado=cursor,lista_no_superado=lista_no_superado)#,
      								#media_acumulada=media_acumulada)#,media_datos_superados=media_datos_superados,
      								#media_datos_no_superados=media_datos_no_superados)
 		
