@@ -7,6 +7,9 @@ from flask import send_from_directory
 from flask import request
 #from __future__ import division
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+import atexit
 
 import re
 import requests
@@ -61,7 +64,7 @@ def run_query(query=''):
 def obtener_dato():
 
 	global umbral
-	umbral = 50.00						#puesto de prueba
+	#umbral = 50.00						#puesto de prueba
 	url = 'http://www.numeroalazar.com.ar/'
 
 	r = requests.get(url)
@@ -110,6 +113,16 @@ def obtener_dato():
 
 
 
+scheduler = BackgroundScheduler()
+scheduler.start()
+scheduler.add_job(
+	func=obtener_dato,
+	trigger=IntervalTrigger(seconds=120),
+	id='aleatorio_job',
+	name='Get Numero',
+	replace_existing=True)
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 
@@ -331,18 +344,18 @@ def obtener_limites_sql():
 	global lista_no_superado
 	global database
 
-	query_umbralsuperado = "SELECT * from N_aleatorio WHERE valor >= %f order by fecha desc LIMIT 30" %(float(umbral))
+	query_umbralsuperado = "SELECT * from N_aleatorio WHERE valor >= %f order by fecha  desc, hora desc" %(float(umbral))  # LIMIT 30
 	run_query(query_umbralsuperado) 
 	lista_superado=run_query(query_umbralsuperado) 
 	#print lista_superado_sql
 
 
-	query_umbral_no_superado = "SELECT * from N_aleatorio WHERE valor <= %f order by fecha desc LIMIT 30" %(float(umbral))
+	query_umbral_no_superado = "SELECT * from N_aleatorio WHERE valor <= %f order by fecha desc, hora desc " %(float(umbral))
 	run_query(query_umbral_no_superado)
 	lista_no_superado=run_query(query_umbral_no_superado)
 	#print lista_no_superado
 
-	query_database= "SELECT * from N_aleatorio"
+	query_database= "SELECT * from N_aleatorio order by fecha desc,hora desc"
 	run_query(query_database)
 	database=run_query(query_database)
 
@@ -540,7 +553,7 @@ def index():
 		return render_template("index2.html", umbral=umbral,database=database,
 								lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 								media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior,
-								mensaje1=mensaje1,mensaje2=mensaje2)# mensaje3=mensaje3)
+								mensaje1=mensaje1,mensaje2=mensaje2)#a,mensaje3=mensaje3)
 
 	elif (request.form['boton1'] == 'Fijar Umbral'):
 		if (request.form['db1'] == 'sql'):
@@ -676,5 +689,5 @@ if __name__ == '__main__':
 	#obtener_database_mongo()
 	#calcular_media_mongo_sup()
 	
-	app.debug = True
+	app.debug = False
 	app.run(host ='0.0.0.0')
