@@ -283,8 +283,8 @@ def calcular_media_mongo_sup():
 	media_inferior=0.0
 	media_superior=0.0
 	#a=1
-	b=1
-	c=1
+	b=0
+	c=0
 
 
 
@@ -308,8 +308,8 @@ def calcular_media_mongo_sup():
 			#print 'c'
 
 	
-	media_superior=media_superior/(b-1)
-	media_inferior=media_inferior/(c-1)
+	media_superior=media_superior/(b)
+	media_inferior=media_inferior/(c)
 
 	# for elemento in cursor:
 	# 	media = float(elemento['valor']) + media
@@ -320,8 +320,8 @@ def calcular_media_mongo_sup():
 
 
 	#print media
-	print media_superior
-	print media_inferior
+	#print media_superior
+	#print media_inferior
 
 	mongoClient.close()
 
@@ -347,7 +347,7 @@ def obtener_limites_sql():
 	database=run_query(query_database)
 
 
-	print database
+	#print database
 
 def calcular_media_sql():
 	global media
@@ -421,7 +421,7 @@ def obtener_limites_bbt():
 	 	else:
 	 		lista_no_superado.append([num_bbt_valor[i]['data'],num_bbt_fecha[i]['data'],num_bbt_hora[i]['data']])
 	 	
-	print lista_superado
+	#print lista_superado
 	#print lista_no_superado
 
 def obtener_database_bbt():
@@ -491,13 +491,11 @@ def calcular_media_bbt():
 	media_inferior = media_inferior/(b-1)
 	
 
-	#print num_bbt
-	print media
-	print media_superior
-	print media_inferior
-	# print media_inferior1
-	# print a
-	# print b
+	
+	#print media
+	#print media_superior
+	#print media_inferior
+	
 
 
 	
@@ -535,14 +533,14 @@ def index():
 		
 	if (request.method == 'GET'):
 		print "Metodo GET"
-		#mensaje1 = 'sql'
-		#mensaje2 = '_'
-		#obtener_limites_sql()
-		#calcular_media_sql()
-		return render_template("index.html", umbral=umbral)#,database=database
-								#lista_superado=lista_superado,lista_no_superado=lista_no_superado,
-								#media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior,
-								#mensaje1=mensaje1,mensaje2=mensaje2)
+		mensaje1 = 'sql'
+		mensaje2 = 'sql'
+		obtener_limites_sql()
+		calcular_media_sql()
+		return render_template("index2.html", umbral=umbral,database=database,
+								lista_superado=lista_superado,lista_no_superado=lista_no_superado,
+								media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior,
+								mensaje1=mensaje1,mensaje2=mensaje2)# mensaje3=mensaje3)
 
 	elif (request.form['boton1'] == 'Fijar Umbral'):
 		if (request.form['db1'] == 'sql'):
@@ -551,7 +549,7 @@ def index():
 			print umbral
 			obtener_limites_sql()
 			#calcular_media_sql()
-			return render_template("index.html",database=database, umbral=umbral,
+			return render_template("index2.html",database=database, umbral=umbral,
 									lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 									#media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior, 
 									mensaje1=mensaje1)
@@ -562,7 +560,7 @@ def index():
 				obtener_limites_bbt()
 				obtener_database_bbt()
 				#calcular_media_bbt()
-				return render_template("index.html",database=database, umbral=umbral,
+				return render_template("index2.html",database=database, umbral=umbral,
 													lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 													#media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior, 
 													mensaje1=mensaje1)
@@ -572,7 +570,7 @@ def index():
 				obtener_limites_mongodb()
 				obtener_database_mongo()
 				#calcular_media_mongodb()
-				return render_template("index.html",database=database, umbral=umbral,
+				return render_template("index2.html",database=database, umbral=umbral,
 													lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 													#media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior, 
 													mensaje1=mensaje1)
@@ -585,7 +583,7 @@ def index():
 			#print "calcula media"
 			calcular_media_sql()
 			#obtener_limites_sql()					
-			return render_template("index.html", umbral=umbral,#database=database,
+			return render_template("index2.html", umbral=umbral,database=database,
 												#lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 												media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior, 
 												mensaje2=mensaje2)
@@ -595,7 +593,7 @@ def index():
 			mensaje2= 'bbt'
 			calcular_media_bbt()
 
-			return render_template("index.html", umbral=umbral,#database=database,
+			return render_template("index2.html", umbral=umbral,#database=database,
 								   #lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 			 						media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior,
 			 						mensaje2=mensaje2)
@@ -604,7 +602,7 @@ def index():
 			mensaje2='mongodb'
 			calcular_media_mongo()
 			calcular_media_mongo_sup()
-	 		return render_template("index.html",  umbral=umbral,#database=database,
+	 		return render_template("index2.html",  umbral=umbral,#database=database,
 	 								#lista_superado=lista_superado,lista_no_superado=lista_no_superado,
 									media_acumulada=media,media_datos_superados=media_superior,media_datos_no_superados=media_inferior,
 								    mensaje2=mensaje2)
@@ -638,42 +636,45 @@ if __name__ == '__main__':
 	global lista_superado
 	global lista_no_superado
 	global flag
-	# global media_acumulada
-	# global media_sql
-	# global media_btt
-	# global media_datos_superados
-	# global media_datos_no_superados
-	# global media_superior
-	# global media_inferior
-	# global db
-	# global media
-	# global mensaje
-	# global lista
+
+	global media
+	global media_superior
+	global media_inferior
+	
+	
+	global mensaje1
+	global mensaje2
+	global mensaje3
+	
 	# global database
 
 	flag= 0
-	#a= 0.0
-	#b= 0.0
+	
 	umbral=50.00
-	#media = 00.00
-	#media_superior= 00.00
-	#media_inferior= 00.00
-	#media_acumulada = 00.00
-	#media_datos_superados = 00.00
-	#media_datos_no_superados =00.00 
+	media = 00.00
+	media_superior= 00.00
+	media_inferior= 00.00
+	
 	#mensaje1 ='_'
 	#mensaje2 ='_'
-	#database = '.'
-	#lista_superado = '.'
-	#lista_no_superado ='.'
+	#mensaje3 ='_'
+	
+	lista_superado = '.'
+	lista_no_superado ='.'
+
+
 	#obtener_dato()
-	#obtener_limites_sql()
+	obtener_limites_sql()
+	calcular_media_sql()
+
 	#calcular_media_bbt()
-	obtener_limites_bbt()
+	#obtener_limites_bbt()
+	#obtener_database_bbt()
+	
 	#obtener_limites_mongodb()
 	#calcular_media_mongo()
-	#calcular_media_bbt()
-	#mongo_db_prueba()
-	#obtener_database_bbt()
+	#obtener_database_mongo()
+	#calcular_media_mongo_sup()
+	
 	app.debug = True
 	app.run(host ='0.0.0.0')
