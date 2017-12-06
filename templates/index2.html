@@ -140,10 +140,13 @@
   }
 
   .jumbotron {
-      background-color: #f4511e;
+      
       color: #fff;
       padding: 130px 25px;
       font-family: Montserrat, sans-serif;
+      background-image: url("http://www.hdfondos.eu/preview/get_photo/63794/1440/900");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
   }
   .jumbotron2 {
       background-color: white;
@@ -151,22 +154,41 @@
       padding: 100px 25px;
       font-family: Montserrat, sans-serif;
   }
+  
+  .fondo {
+      color: white ;
+      padding: 130px 5px;
+      font-family: Montserrat, sans-serif;
+      background-image: url("http://www.hdfondos.eu/preview/get_photo/63794/1440/900");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+  }
   .botones_media{
       position: absolute;
     left : 300px;
-    top  : 1030px;
+    top  : 1530px;
     color : grey;
     font-size :20px ;
   }
   .boton_alternativa{
       position: absolute;
     left : 300px;
-    top  : 350px;
+    top  : 850px;
     color : black;
     font-size :20px ;
 
   }
-  
+  .ejemplo2{
+    color: white;
+    padding: 130px 5px;
+    font-size: 200%;
+    text-align: center;
+    border: 1px solid white;
+  }
+  .ejemplo3{
+    color: black;
+    
+  }
   .colorletra{
     color :black;
   }
@@ -190,9 +212,23 @@
       resize: none;
   }
   </style>
-</head>
+
+
+ </head>
 
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50">
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+<div  class="fondo text-center">
+  <h1>NUMEROS ALEATORIOS</h1> 
+  <p>En esta página podrás consultar: los valores de la base de datos, fijar un umbral para comprobar que valores acumulados lo superan o no y calcular la media de cada una de las bases de datos y obtener gráficas de estos valores </p> 
+  
+      <form><input class="ejemplo3" type="button" value="Go to graficas" onClick="window.open('https://beebotte.com/dash/fa27b490-d9df-11e7-bfef-6f68fef5ca14#.WibUfXAo8eo')"></form>
+</div>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -321,7 +357,7 @@
   <div id="band" class="container text-center">
   <h3>DATABASE SELECTION</h3>
   <p><em>DATOS de la DATABASE ={{mensaje1}}</em></p>
-  <p>Mostramos los ultimos 30 valores guardados en la DATABSE que superan el umbral fijado</p>  
+  <p>Mostramos los ultimos valores guardados en la DATABSE que superan el umbral fijado</p>  
   <br>
         <div class="col-sm-4">
           <div class="thumbnail">
@@ -337,10 +373,10 @@
           <div class="thumbnail">
             <p><strong>DATABASE > Umbral </strong></p>
             {% for elemento in lista_superado %}
-                {% if elemento[0] > 30 %}
+                <!--{% if elemento[0] > 30 %} -->
                    <b style="font-size: 10px" ><font color = "green"> {{elemento[0]}} <td> &nbsp;</td>
                    {{elemento[1]}} <td> &nbsp;</td> {{elemento[2]}}   </br></font></b>
-                {% endif %}
+                <!--{% endif %}  -->
             {% endfor %}         
             
            
@@ -349,13 +385,16 @@
         <div class="col-sm-4">
           <div class="thumbnail">
             <p><strong>DATABASE < Umbral </strong></p>
-            {% for elemento in lista_no_superado %}
-              {% if elemento[0] < 30 %}
+            <!--{% for elemento in lista_no_superado %}
+               {% if elemento[0] < 30 %} 
                 <b style="font-size: 10px" ><font color = "red">{{elemento[0]}} <td> &nbsp;</td>
                  {{elemento[1]}} <td> &nbsp;</td> {{elemento[2]}}   </br></font> </b>
-              {% endif %}
-            {% endfor %}
-                      
+              {% endif %} 
+            {% endfor %} -->
+            {% for elemento in lista_no_superado %}
+            <b style="font-size: 10px" ><font color = "red"> {{elemento[0]}} <td> &nbsp;</td>
+             {{elemento[1]}} <td> &nbsp;</td> {{elemento[2]}}   </br></font> </b>
+            {% endfor %}          
            
           </div>
         </div>
